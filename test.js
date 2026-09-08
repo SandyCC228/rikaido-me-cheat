@@ -119,6 +119,10 @@ assert.strictEqual(localeOrder('x').length, 4);                          // 永�
     assert.ok(html.includes(`<script src="${root}assets/app.js">`), `${file} app.js 路徑不對`);
     assert.ok(html.includes(`href="${root}favicon.webp"`), `${file} favicon 路徑不對`);
 
+    // 免責聲明：每頁都要有，且是該語系的版本
+    assert.ok(i18n[lang].disclaimer, `${lang} 缺 disclaimer 文案`);
+    assert.ok(html.includes(i18n[lang].disclaimer), `${file} 頁尾沒有免責聲明`);
+
     // 內嵌的 I18N 就是該語系的字典
     const inline = JSON.parse(html.match(/window\.I18N = (\{.*?\});<\/script>/s)[1]);
     assert.deepStrictEqual(inline, i18n[lang].ui, `${file} 內嵌的 I18N 與 i18n.json 不符`);

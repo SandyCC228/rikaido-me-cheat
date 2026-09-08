@@ -112,11 +112,10 @@
   @media (min-width: 26rem) { .fields { grid-template-columns: 2fr 1fr; } }
   #smsg:empty { display: none; }
   a { color: var(--ok-fg); }
-  nav.langs {
-    margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line);
-    display: flex; gap: 1rem; flex-wrap: wrap; font-size: .9rem;
-  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  nav.langs { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .9rem; }
   nav.langs span { color: var(--muted); }
+  .disclaimer { margin: .75rem 0 0; color: var(--muted); font-size: .85rem; }
 </style>
 <body>
 <main>
@@ -130,10 +129,13 @@
   </form>
   <p id="status"></p>
   <div id="result"></div>
-  <nav class="langs"><a href="https://sandycc228.github.io/rikaido-me-cheat/" hreflang="ja">日本語</a>
+  <footer>
+    <nav class="langs"><a href="https://sandycc228.github.io/rikaido-me-cheat/" hreflang="ja">日本語</a>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/en/" hreflang="en">English</a>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/ko/" hreflang="ko">한국어</a>
     <span>繁體中文</span></nav>
+    <p class="disclaimer">非官方的第三方工具，與 rikaido.me 及其開發者無關。</p>
+  </footer>
 </main>
 <script>window.I18N = {"placeholder":"貼上 quiz 網址或 id","search":"查詢","searching":"查詢中…","notFound":"找不到這個 quiz，確認網址是否正確","owner":"「{owner}」的 quiz · {n} 題","fallback":"題庫載入失敗，只能顯示 A／B。","answerIs":"正解：{ab}","sendSummary":"懶得點，直接幫我送出一筆","sendNote":"這會真的寫進這份 quiz 的排行榜，出題者看得到。","name":"暱稱","score":"分數","send":"送出","sending":"送出中…","needName":"要填暱稱","badScore":"分數要是 0~{max} 的整數","sent":"送出成功。","sentLink":"去看排行榜","sendFail":"送出失敗："};</script>
 <script src="../assets/core.js"></script>

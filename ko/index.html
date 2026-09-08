@@ -112,11 +112,10 @@
   @media (min-width: 26rem) { .fields { grid-template-columns: 2fr 1fr; } }
   #smsg:empty { display: none; }
   a { color: var(--ok-fg); }
-  nav.langs {
-    margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line);
-    display: flex; gap: 1rem; flex-wrap: wrap; font-size: .9rem;
-  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  nav.langs { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .9rem; }
   nav.langs span { color: var(--muted); }
+  .disclaimer { margin: .75rem 0 0; color: var(--muted); font-size: .85rem; }
 </style>
 <body>
 <main>
@@ -130,10 +129,13 @@
   </form>
   <p id="status"></p>
   <div id="result"></div>
-  <nav class="langs"><a href="https://sandycc228.github.io/rikaido-me-cheat/" hreflang="ja">日本語</a>
+  <footer>
+    <nav class="langs"><a href="https://sandycc228.github.io/rikaido-me-cheat/" hreflang="ja">日本語</a>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/en/" hreflang="en">English</a>
     <span>한국어</span>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/tw/" hreflang="zh-TW">繁體中文</a></nav>
+    <p class="disclaimer">비공식 팬 제작 도구입니다. rikaido.me 및 개발자와 관련이 없습니다.</p>
+  </footer>
 </main>
 <script>window.I18N = {"placeholder":"퀴즈 URL 또는 ID 붙여넣기","search":"조회","searching":"조회 중…","notFound":"해당 퀴즈를 찾을 수 없습니다. URL을 확인해 주세요","owner":"「{owner}」님의 퀴즈 · {n}문제","fallback":"문제 데이터를 불러오지 못했습니다. A/B만 표시합니다.","answerIs":"정답: {ab}","sendSummary":"풀지 않고 점수만 보내기","sendNote":"이 퀴즈의 랭킹에 실제로 기록되며 만든 사람이 볼 수 있습니다.","name":"닉네임","score":"점수","send":"보내기","sending":"보내는 중…","needName":"닉네임을 입력하세요","badScore":"점수는 0~{max} 사이의 정수여야 합니다","sent":"전송 완료. ","sentLink":"랭킹 보기","sendFail":"전송 실패: "};</script>
 <script src="../assets/core.js"></script>

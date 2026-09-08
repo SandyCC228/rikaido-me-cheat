@@ -35,6 +35,7 @@ for (const lang of langs) {
     .replace(/\{\{title\}\}/g, esc(L.title))
     .replace(/\{\{desc\}\}/g, esc(L.desc))
     .replace(/\{\{intro\}\}/g, esc(L.intro))
+    .replace(/\{\{disclaimer\}\}/g, esc(L.disclaimer))
     .replace(/\{\{placeholder\}\}/g, esc(L.ui.placeholder))
     .replace(/\{\{search\}\}/g, esc(L.ui.search))
     .replace(/\{\{canonical\}\}/g, urlOf(lang))

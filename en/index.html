@@ -112,11 +112,10 @@
   @media (min-width: 26rem) { .fields { grid-template-columns: 2fr 1fr; } }
   #smsg:empty { display: none; }
   a { color: var(--ok-fg); }
-  nav.langs {
-    margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line);
-    display: flex; gap: 1rem; flex-wrap: wrap; font-size: .9rem;
-  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  nav.langs { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .9rem; }
   nav.langs span { color: var(--muted); }
+  .disclaimer { margin: .75rem 0 0; color: var(--muted); font-size: .85rem; }
 </style>
 <body>
 <main>
@@ -130,10 +129,13 @@
   </form>
   <p id="status"></p>
   <div id="result"></div>
-  <nav class="langs"><a href="https://sandycc228.github.io/rikaido-me-cheat/" hreflang="ja">日本語</a>
+  <footer>
+    <nav class="langs"><a href="https://sandycc228.github.io/rikaido-me-cheat/" hreflang="ja">日本語</a>
     <span>English</span>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/ko/" hreflang="ko">한국어</a>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/tw/" hreflang="zh-TW">繁體中文</a></nav>
+    <p class="disclaimer">An unofficial fan-made tool. Not affiliated with rikaido.me or its developers.</p>
+  </footer>
 </main>
 <script>window.I18N = {"placeholder":"Paste a quiz URL or ID","search":"Look up","searching":"Looking up…","notFound":"No such quiz. Check the URL and try again","owner":"{owner}'s quiz · {n} questions","fallback":"Could not load the question set — showing A/B only.","answerIs":"Answer: {ab}","sendSummary":"Skip the quiz, just submit a score","sendNote":"This really does write to this quiz's ranking. Its creator can see it.","name":"Nickname","score":"Score","send":"Submit","sending":"Submitting…","needName":"Enter a nickname","badScore":"Score must be a whole number from 0 to {max}","sent":"Submitted. ","sentLink":"View the ranking","sendFail":"Failed: "};</script>
 <script src="../assets/core.js"></script>

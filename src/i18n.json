@@ -5,6 +5,7 @@
     "title": "rikaido 答え一覧",
     "desc": "rikaido.me のクイズの問題と正解をまとめて表示します。URL を貼るだけ。スコアの送信もできます。",
     "intro": "rikaido のクイズ URL か ID を貼ると、そのクイズの全問題と正解が表示されます。",
+    "disclaimer": "非公式のファンツールです。rikaido.me およびその開発者とは関係がありません。",
     "ui": {
       "placeholder": "クイズの URL か ID を貼り付け",
       "search": "検索",
@@ -32,6 +33,7 @@
     "title": "rikaido Answer Key",
     "desc": "Look up the questions and correct answers for any rikaido.me quiz. Paste a URL to see every answer, or submit a score directly.",
     "intro": "Paste a rikaido quiz URL or ID to see every question with its correct answer.",
+    "disclaimer": "An unofficial fan-made tool. Not affiliated with rikaido.me or its developers.",
     "ui": {
       "placeholder": "Paste a quiz URL or ID",
       "search": "Look up",
@@ -59,6 +61,7 @@
     "title": "rikaido 정답 조회",
     "desc": "rikaido.me 퀴즈의 문제와 정답을 한 번에 확인하세요. URL만 붙여넣으면 되고, 점수 제출도 가능합니다.",
     "intro": "rikaido 퀴즈 URL이나 ID를 붙여넣으면 해당 퀴즈의 모든 문제와 정답을 볼 수 있습니다.",
+    "disclaimer": "비공식 팬 제작 도구입니다. rikaido.me 및 개발자와 관련이 없습니다.",
     "ui": {
       "placeholder": "퀴즈 URL 또는 ID 붙여넣기",
       "search": "조회",
@@ -86,6 +89,7 @@
     "title": "rikaido 正解查詢",
     "desc": "查詢 rikaido.me 任一份 quiz 的題目與正解，貼上網址就能看到全部答案，也可以直接送出一筆成績。",
     "intro": "貼上 rikaido 的 quiz 網址或 id，就能看到那份 quiz 的全部題目與正解。",
+    "disclaimer": "非官方的第三方工具，與 rikaido.me 及其開發者無關。",
     "ui": {
       "placeholder": "貼上 quiz 網址或 id",
       "search": "查詢",

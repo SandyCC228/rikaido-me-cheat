@@ -108,11 +108,10 @@
   @media (min-width: 26rem) { .fields { grid-template-columns: 2fr 1fr; } }
   #smsg:empty { display: none; }
   a { color: var(--ok-fg); }
-  nav.langs {
-    margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line);
-    display: flex; gap: 1rem; flex-wrap: wrap; font-size: .9rem;
-  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  nav.langs { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .9rem; }
   nav.langs span { color: var(--muted); }
+  .disclaimer { margin: .75rem 0 0; color: var(--muted); font-size: .85rem; }
 </style>
 <body>
 <main>
@@ -126,7 +125,10 @@
   </form>
   <p id="status"></p>
   <div id="result"></div>
-  <nav class="langs">{{langnav}}</nav>
+  <footer>
+    <nav class="langs">{{langnav}}</nav>
+    <p class="disclaimer">{{disclaimer}}</p>
+  </footer>
 </main>
 <script>window.I18N = {{ui}};</script>
 <script src="{{root}}assets/core.js"></script>

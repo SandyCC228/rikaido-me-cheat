@@ -112,11 +112,10 @@
   @media (min-width: 26rem) { .fields { grid-template-columns: 2fr 1fr; } }
   #smsg:empty { display: none; }
   a { color: var(--ok-fg); }
-  nav.langs {
-    margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line);
-    display: flex; gap: 1rem; flex-wrap: wrap; font-size: .9rem;
-  }
+  footer { margin-top: 3rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  nav.langs { display: flex; gap: 1rem; flex-wrap: wrap; font-size: .9rem; }
   nav.langs span { color: var(--muted); }
+  .disclaimer { margin: .75rem 0 0; color: var(--muted); font-size: .85rem; }
 </style>
 <body>
 <main>
@@ -130,10 +129,13 @@
   </form>
   <p id="status"></p>
   <div id="result"></div>
-  <nav class="langs"><span>日本語</span>
+  <footer>
+    <nav class="langs"><span>日本語</span>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/en/" hreflang="en">English</a>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/ko/" hreflang="ko">한국어</a>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/tw/" hreflang="zh-TW">繁體中文</a></nav>
+    <p class="disclaimer">非公式のファンツールです。rikaido.me およびその開発者とは関係がありません。</p>
+  </footer>
 </main>
 <script>window.I18N = {"placeholder":"クイズの URL か ID を貼り付け","search":"検索","searching":"検索中…","notFound":"このクイズが見つかりません。URL を確認してください","owner":"「{owner}」さんのクイズ・{n} 問","fallback":"問題データを読み込めませんでした。A／B のみ表示します。","answerIs":"正解：{ab}","sendSummary":"解かずにスコアだけ送る","sendNote":"このクイズのランキングに実際に書き込まれます。作成者にも見えます。","name":"ニックネーム","score":"スコア","send":"送信","sending":"送信中…","needName":"ニックネームを入力してください","badScore":"スコアは 0〜{max} の整数で入力してください","sent":"送信しました。","sentLink":"ランキングを見る","sendFail":"送信に失敗しました："};</script>
 <script src="assets/core.js"></script>
