@@ -14,7 +14,7 @@
 <div id="result"></div>
 
 <script>
-const { fetchQuiz, toQuizId } = window.CHEAT_CORE;
+const { fetchQuiz, capOf, spread, buildWrite, FS, LOCALES } = window.CHEAT_CORE;
 const $ = id => document.getElementById(id);
 
 // 題庫只能用 script 標籤載（fetch 會被 CORS 擋）；失敗回 null 走降級
@@ -35,7 +35,7 @@ $('ask').onsubmit = async e => {
   $('result').innerHTML = '';
   $('status').textContent = '查詢中…';
   try {
-    const quiz = await fetchQuiz(toQuizId($('input').value.trim()));
+    const quiz = await fetchQuiz($('input').value.trim());   // 傳原始輸入，網址裡有語系線索
     const set = await loadQuestions(quiz.questionsUrl, quiz.v);
     $('status').textContent = '';
     render(quiz, set);
@@ -68,6 +68,51 @@ function render(quiz, set) {
     ol.append(li);
   });
   $('result').append(ol);
+
+  // 題庫載不到就不給送出：g 的 key 必須是題庫的分類名，網站的雷達圖照那些 key 取值，
+  // 算不出分類就不該寫進去。
+  if (set) renderSubmit(quiz, set);
+}
+
+function renderSubmit(quiz, set) {
+  const total = quiz.qids.length;
+  const box = document.createElement('details');
+  box.innerHTML = `
+    <summary>懶得點，直接幫我送出一筆</summary>
+    <p>這會真的寫進這份 quiz 的排行榜，出題者看得到。</p>
+    <label>暱稱 <input id="sname" required></label>
+    <label>分數 <input id="sscore" type="number" min="0" max="${total}" value="${total}"></label>
+    <button id="sbtn">送出</button>
+    <p id="smsg"></p>`;
+  $('result').append(box);
+
+  $('sbtn').onclick = async () => {
+    const name = $('sname').value.trim();
+    const score = Number($('sscore').value);
+    if (!name) return ($('smsg').textContent = '要填暱稱');
+    if (!Number.isInteger(score) || score < 0 || score > total) {
+      return ($('smsg').textContent = `分數要是 0~${total} 的整數`);
+    }
+    const g = spread(score, capOf(quiz.qids, set));
+
+    $('sbtn').disabled = true;
+    $('smsg').textContent = '送出中…';
+    try {
+      const res = await fetch(`${FS}:commit`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ writes: [buildWrite({
+          collection: quiz.collection, quizId: quiz.id, name, score, g, answers: quiz.answers,
+        })] }),
+      });
+      if (!res.ok) throw new Error(JSON.stringify(await res.json()).slice(0, 200));
+      const path = LOCALES.find(l => l.code === quiz.locale).quizUrlPath;
+      $('smsg').innerHTML = `送出成功。<a href="https://rikaido.me${path}?q=${quiz.id}" target="_blank" rel="noopener">去看排行榜</a>`;
+    } catch (err) {
+      $('smsg').textContent = '送出失敗：' + err.message;
+      $('sbtn').disabled = false;
+    }
+  };
 }
 </script>
 </body>

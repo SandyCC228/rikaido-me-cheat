@@ -21,15 +21,17 @@ function questions(url, v) {
 }
 
 const quizCache = new Map();
-function quiz(quizId) {
-  if (!quizCache.has(quizId)) quizCache.set(quizId, fetchQuiz(quizId));
+function quiz(input) {
+  const quizId = toQuizId(input);
+  // 快取用 id 當 key，但查詢傳原始輸入：網址裡的語系決定先問哪個 collection
+  if (!quizCache.has(quizId)) quizCache.set(quizId, fetchQuiz(input));
   return quizCache.get(quizId);
 }
 
 async function submit(quizIdOrUrl, nameArg, scoreArg, countArg) {
   const quizId = toQuizId(quizIdOrUrl);
   if (!quizId || !nameArg) throw new Error('要有 quizId 和暱稱');
-  const { answers, qids, owner, collection, questionsUrl, v } = await quiz(quizId);
+  const { answers, qids, owner, collection, questionsUrl, v } = await quiz(quizIdOrUrl);
   const qs = await questions(questionsUrl, v);
   const total = qids.length;
 
@@ -61,7 +63,7 @@ async function submit(quizIdOrUrl, nameArg, scoreArg, countArg) {
 
 async function list(quizIdOrUrl) {
   const quizId = toQuizId(quizIdOrUrl);
-  const { collection } = await quiz(quizId);
+  const { collection } = await quiz(quizIdOrUrl);
   const res = await fetch(`${FS}/${collection}/${quizId}:runQuery`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
@@ -84,8 +86,9 @@ async function list(quizIdOrUrl) {
 async function interactive() {
   const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
   try {
-    const quizId = toQuizId((await rl.question('quiz id 或網址: ')).trim());
-    const { owner, qids } = await quiz(quizId);   // 先確認題目存在，也拿到題數
+    const input = (await rl.question('quiz id 或網址: ')).trim();
+    const { owner, qids } = await quiz(input);   // 先確認題目存在，也拿到題數
+    const quizId = toQuizId(input);
     const total = qids.length;
     console.log(`出題者「${owner}」，共 ${total} 題\n`);
 

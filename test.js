@@ -54,6 +54,37 @@ assert.strictEqual(w.update.fields.g.mapValue.fields.food.integerValue, '2');
 assert.deepStrictEqual(w.updateTransforms, [{ fieldPath: 't', setToServerValue: 'REQUEST_TIME' }]);
 assert.deepStrictEqual(w.currentDocument, { exists: false });
 
+// localeOrder：網址裡的語系排第一，其餘按 tw→ja→en→ko 遞補；
+// 依序查才不會對其他語系發出必然 403 的請求（瀏覽器 console 會印紅字）
+const { localeOrder } = require('./core.js');
+const codes = input => localeOrder(input).map(l => l.code);
+assert.deepStrictEqual(codes('https://rikaido.me/tw/?q=x'), ['tw', 'ja', 'en', 'ko']);
+assert.deepStrictEqual(codes('https://rikaido.me/?q=x'), ['ja', 'tw', 'en', 'ko']);
+assert.deepStrictEqual(codes('https://rikaido.me/en/?q=x'), ['en', 'tw', 'ja', 'ko']);
+assert.deepStrictEqual(codes('https://rikaido.me/ko/?q=x'), ['ko', 'tw', 'ja', 'en']);
+assert.deepStrictEqual(codes('dek3wath6y'), ['tw', 'ja', 'en', 'ko']);   // 純 id：繁中優先
+assert.strictEqual(localeOrder('x').length, 4);                          // 永遠涵蓋四個語系
+
+// 瀏覽器模式：<script src="core.js"> 與頁面的 inline script 共用同一個全域作用域，
+// core.js 若在頂層宣告名字，頁面再宣告同名變數就是 SyntaxError（已實際發生過：
+// "Identifier 'fetchQuiz' has already been declared"）。這裡照那個情境跑兩段 script。
+{
+  const vm = require('vm');
+  const PAGE = 'const { fetchQuiz, toQuizId, capOf, spread, buildWrite, FS, LOCALES } = window.CHEAT_CORE;';
+
+  const ctx = vm.createContext({ window: {}, fetch: () => {}, URL });
+  vm.runInContext(require('fs').readFileSync('./core.js', 'utf8'), ctx);
+  assert.ok(ctx.window.CHEAT_CORE, 'core.js 應把 API 掛在 window.CHEAT_CORE');
+  assert.strictEqual(typeof ctx.window.CHEAT_CORE.fetchQuiz, 'function');
+  vm.runInContext(PAGE, ctx);   // 不該拋
+
+  // 反證：沒包 IIFE 的版本必須被同一個檢查抓出來，否則上面那行是恆真斷言
+  const leakyCtx = vm.createContext({ window: {} });
+  vm.runInContext('const fetchQuiz = 1; window.CHEAT_CORE = { fetchQuiz };', leakyCtx);
+  assert.throws(() => vm.runInContext(PAGE, leakyCtx), /already been declared/,
+    '全域衝突檢查失效了');
+}
+
 console.log('✓ core.js 全部通過');
 
 // fetchQuiz：一次 batchGet 四個 collection，認出語系
