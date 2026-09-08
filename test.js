@@ -55,3 +55,19 @@ assert.deepStrictEqual(w.updateTransforms, [{ fieldPath: 't', setToServerValue: 
 assert.deepStrictEqual(w.currentDocument, { exists: false });
 
 console.log('✓ core.js 全部通過');
+
+// fetchQuiz：一次 batchGet 四個 collection，認出語系
+(async () => {
+  const { fetchQuiz } = require('./core.js');
+  const q = await fetchQuiz('dek3wath6y');
+  assert.strictEqual(q.locale, 'tw');
+  assert.strictEqual(q.collection, 'quizzes_tw');
+  assert.strictEqual(q.id, 'dek3wath6y');
+  assert.strictEqual(q.qids.length, q.answers.length);
+  assert.match(q.answers, /^[AB]+$/);
+  assert.ok(q.owner.length > 0);
+  assert.ok(q.questionsUrl.endsWith('/js/questions-tw.js'));
+
+  await assert.rejects(() => fetchQuiz('這個一定不存在'), /找不到 quiz/);
+  console.log('✓ fetchQuiz 連線測試通過');
+})();

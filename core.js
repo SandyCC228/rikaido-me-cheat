@@ -17,9 +17,9 @@ const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 const autoId = () => Array.from({ length: 20 }, () => CHARS[Math.floor(Math.random() * CHARS.length)]).join('');
 
 // 依題目 index 統計各分類題數
-function capOf(qids, set) {
+function capOf(qids, questionSet) {
   const cap = {};
-  qids.forEach(q => { cap[set[q].g] = (cap[set[q].g] || 0) + 1; });
+  qids.forEach(q => { cap[questionSet[q].g] = (cap[questionSet[q].g] || 0) + 1; });
   return cap;
 }
 
@@ -52,5 +52,38 @@ function buildWrite({ collection, quizId, name, score, g, answers }) {
   };
 }
 
-const API = { DB, FS, LOCALES, toQuizId, autoId, capOf, spread, buildWrite };
+// 四個語系並行查，哪個回得出文件就是哪個語系。
+// 不能把四個路徑塞進同一個 batchGet：Firestore 的規則對不存在的文件回 403，
+// 而 quiz 只屬於一個語系，整批必定被拒。
+async function fetchQuiz(quizId) {
+  const hits = await Promise.all(LOCALES.map(async locale => {
+    const res = await fetch(`${FS}:batchGet`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ documents: [`${DB}/${locale.collection}/${quizId}`] }),
+    });
+    if (!res.ok) return null;                       // 403 = 這個語系沒有這份 quiz
+    const found = (await res.json())[0]?.found;
+    return found ? { locale, found } : null;
+  }));
+
+  const hit = hits.find(Boolean);
+  if (!hit) throw new Error('找不到 quiz ' + quizId);
+
+  const { locale, found } = hit;
+  const collection = locale.collection;
+  const f = found.fields;
+  return {
+    id: quizId,
+    locale: locale.code,
+    collection,
+    questionsUrl: locale.questionsUrl,
+    owner: f.n.stringValue,
+    answers: f.a.stringValue,                                  // 正解 "AABAA..."
+    qids: f.q.arrayValue.values.map(v => +v.integerValue),      // 題目 index
+    v: f.v ? +f.v.integerValue : 1,                             // 題庫版本
+  };
+}
+
+const API = { DB, FS, LOCALES, toQuizId, autoId, capOf, spread, buildWrite, fetchQuiz };
 typeof module !== 'undefined' ? module.exports = API : window.CHEAT_CORE = API;

@@ -7,16 +7,17 @@ const readline = require('node:readline/promises');
 const args = process.argv.slice(2).filter(a => !a.startsWith('--'));
 const DRY = process.argv.includes('--dry');
 
-const { DB, FS, toQuizId, autoId, spread, capOf, buildWrite } = require('./core.js');
+const { FS, toQuizId, spread, capOf, buildWrite, fetchQuiz } = require('./core.js');
 
-let qsCache;
-function questions() {
-  return qsCache ??= (async () => {
-    const src = await (await fetch('https://rikaido.me/js/questions-tw.js')).text();
+const qsCache = new Map();
+function questions(url, v) {
+  if (!qsCache.has(url)) qsCache.set(url, (async () => {
+    const src = await (await fetch(url)).text();
     const w = {};
     new Function('window', src)(w);
-    return w.RIKAIDO_QUESTIONS.sets[1];
-  })();
+    return w.RIKAIDO_QUESTIONS.sets[v] || w.RIKAIDO_QUESTIONS.sets[1];
+  })());
+  return qsCache.get(url);
 }
 
 const quizCache = new Map();
@@ -25,25 +26,11 @@ function quiz(quizId) {
   return quizCache.get(quizId);
 }
 
-async function fetchQuiz(quizId) {
-  const res = await fetch(`${FS}:batchGet`, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ documents: [`${DB}/quizzes_tw/${quizId}`] }),
-  });
-  const doc = (await res.json())[0].found;
-  if (!doc) throw new Error('找不到 quiz ' + quizId);
-  return {
-    answers: doc.fields.a.stringValue,                                 // 正解 "AABAA..."
-    qids: doc.fields.q.arrayValue.values.map(v => +v.integerValue),     // 題目 index
-    owner: doc.fields.n.stringValue,
-  };
-}
-
 async function submit(quizIdOrUrl, nameArg, scoreArg, countArg) {
   const quizId = toQuizId(quizIdOrUrl);
   if (!quizId || !nameArg) throw new Error('要有 quizId 和暱稱');
-  const [qs, { answers, qids, owner }] = await Promise.all([questions(), quiz(quizId)]);
+  const { answers, qids, owner, collection, questionsUrl, v } = await quiz(quizId);
+  const qs = await questions(questionsUrl, v);
   const total = qids.length;
 
   const score = scoreArg === undefined || scoreArg === '' ? total : Number(scoreArg);
@@ -56,7 +43,7 @@ async function submit(quizIdOrUrl, nameArg, scoreArg, countArg) {
   const cap = capOf(qids, qs);
   const g = spread(score, cap);
   const writes = Array.from({ length: count },
-    () => buildWrite({ collection: 'quizzes_tw', quizId, name: nameArg, score, g, answers }));
+    () => buildWrite({ collection, quizId, name: nameArg, score, g, answers }));
   console.log(`${quizId}（出題者「${owner}」）→ ${nameArg} ${score}/${total} × ${count}`, g);
 
   // 一次 commit 最多 500 writes
@@ -74,7 +61,8 @@ async function submit(quizIdOrUrl, nameArg, scoreArg, countArg) {
 
 async function list(quizIdOrUrl) {
   const quizId = toQuizId(quizIdOrUrl);
-  const res = await fetch(`${FS}/quizzes_tw/${quizId}:runQuery`, {
+  const { collection } = await quiz(quizId);
+  const res = await fetch(`${FS}/${collection}/${quizId}:runQuery`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ structuredQuery: {
