@@ -356,7 +356,7 @@ git commit -m "feat: 自動偵測 quiz 語系，CLI 支援四語系"
 - [ ] **Step 1: 建立本機預覽 server**
 
 ```js
-// node serve.js → http://localhost:8787/
+// node serve.js → http://localhost:3000/
 const http = require('http');
 const fs = require('fs');
 http.createServer((q, s) => {
@@ -365,7 +365,7 @@ http.createServer((q, s) => {
   try { buf = fs.readFileSync(f); } catch { s.writeHead(404); return s.end(); }
   s.writeHead(200, { 'content-type': f.endsWith('.js') ? 'application/javascript' : 'text/html;charset=utf-8' });
   s.end(buf);
-}).listen(8787, () => console.log('http://localhost:8787/'));
+}).listen(3000, () => console.log('http://localhost:3000/'));
 ```
 
 - [ ] **Step 2: 寫 index.html 的骨架與查詢流程**
@@ -450,7 +450,7 @@ function render(quiz, set) {
 
 - [ ] **Step 3: 瀏覽器驗證正常路徑**
 
-Run: `node serve.js`，瀏覽器開 `http://localhost:8787/`，輸入 `https://rikaido.me/tw/?q=dek3wath6y`
+Run: `node serve.js`，瀏覽器開 `http://localhost:3000/`，輸入 `https://rikaido.me/tw/?q=dek3wath6y`
 Expected: 標題顯示「出題者「AB」・30 題」，30 行題目，每行結尾粗體是正解選項文字（第 1 題應為「便當主菜？→ …」之類的真實題目）
 
 - [ ] **Step 4: 驗證降級路徑**

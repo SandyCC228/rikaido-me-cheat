@@ -95,7 +95,7 @@
   }
   .fields { display: grid; gap: .75rem; }
   @media (min-width: 26rem) { .fields { grid-template-columns: 2fr 1fr; } }
-  #smsg { min-height: 1.6em; }
+  #smsg:empty { display: none; }
   a { color: var(--ok-fg); }
 </style>
 <body>
@@ -224,7 +224,8 @@ function renderSubmit(quiz, set) {
       $('smsg').innerHTML = `送出成功。<a href="https://rikaido.me${path}?q=${quiz.id}" target="_blank" rel="noopener">去看排行榜</a>`;
     } catch (err) {
       $('smsg').textContent = '送出失敗：' + err.message;
-      $('sbtn').disabled = false;
+    } finally {
+      $('sbtn').disabled = false;   // 送出中才擋重複點擊，結束就放開
     }
   };
 }
