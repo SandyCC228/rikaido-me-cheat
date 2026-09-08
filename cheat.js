@@ -7,14 +7,7 @@ const readline = require('node:readline/promises');
 const args = process.argv.slice(2).filter(a => !a.startsWith('--'));
 const DRY = process.argv.includes('--dry');
 
-const DB = 'projects/rikaido-9qu1/databases/(default)/documents';
-const FS = 'https://firestore.googleapis.com/v1/' + DB;
-// 允許直接貼網址 https://rikaido.me/tw/?q=xxx，非網址就當 id
-const toQuizId = s => { try { return new URL(s).searchParams.get('q') || s; } catch { return s; } };
-
-const CHARS ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-// Firestore auto-id 是 20 字元 A-Za-z0-9，照抄格式免得一眼看出是灌的
-const autoId = () => Array.from({ length: 20 }, () => CHARS[Math.floor(Math.random() * CHARS.length)]).join('');
+const { DB, FS, toQuizId, autoId, spread, capOf, buildWrite } = require('./core.js');
 
 let qsCache;
 function questions() {
@@ -47,19 +40,6 @@ async function fetchQuiz(quizId) {
   };
 }
 
-// 把分數攤到各分類，受該類題數上限；總和必為 score
-function spread(score, cap) {
-  const g = {};
-  let left = score;
-  const keys = Object.keys(cap);
-  keys.forEach((k, i) => {
-    g[k] = Math.min(cap[k], Math.round(left / (keys.length - i)));
-    left -= g[k];
-  });
-  console.assert(Object.values(g).reduce((a, b) => a + b, 0) === score, 'genre 分配總和對不上分數');
-  return g;
-}
-
 async function submit(quizIdOrUrl, nameArg, scoreArg, countArg) {
   const quizId = toQuizId(quizIdOrUrl);
   if (!quizId || !nameArg) throw new Error('要有 quizId 和暱稱');
@@ -73,26 +53,10 @@ async function submit(quizIdOrUrl, nameArg, scoreArg, countArg) {
   const count = countArg === undefined || countArg === '' ? 1 : Number(countArg);
   if (!Number.isInteger(count) || count < 1) throw new Error(`次數要是 1 以上的整數，收到「${countArg}」`);
 
-  const cap = {};
-  qids.forEach(q => { cap[qs[q].g] = (cap[qs[q].g] || 0) + 1; });
+  const cap = capOf(qids, qs);
   const g = spread(score, cap);
-
-  const write = () => ({
-    update: {
-      name: `${DB}/quizzes_tw/${quizId}/results/${autoId()}`,
-      fields: {
-        n: { stringValue: nameArg },
-        s: { integerValue: String(score) },
-        g: { mapValue: { fields: Object.fromEntries(
-          Object.entries(g).map(([k, v]) => [k, { integerValue: String(v) }])) } },
-        r: { stringValue: answers },   // 作答字串，網站不驗，照抄正解
-      },
-    },
-    updateTransforms: [{ fieldPath: 't', setToServerValue: 'REQUEST_TIME' }],
-    currentDocument: { exists: false },
-  });
-
-  const writes = Array.from({ length: count }, write);
+  const writes = Array.from({ length: count },
+    () => buildWrite({ collection: 'quizzes_tw', quizId, name: nameArg, score, g, answers }));
   console.log(`${quizId}（出題者「${owner}」）→ ${nameArg} ${score}/${total} × ${count}`, g);
 
   // 一次 commit 最多 500 writes
