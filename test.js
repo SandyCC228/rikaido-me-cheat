@@ -120,7 +120,10 @@ assert.strictEqual(localeOrder('x').length, 4);                          // 永�
 
     // 免責聲明：每頁都要有，且是該語系的版本
     assert.ok(i18n[lang].disclaimer, `${lang} 缺 disclaimer 文案`);
-    assert.ok(html.includes(i18n[lang].disclaimer), `${file} 頁尾沒有免責聲明`);
+    const shown = html.match(/class="disclaimer">([\s\S]*?)<\/p>/)[1].replace(/<[^>]+>/g, '');
+    assert.strictEqual(shown, i18n[lang].disclaimer, `${file} 頁尾的免責聲明與文案不符`);
+    assert.ok(/class="disclaimer">[^<]*<a href="https:\/\/rikaido\.me\/"/.test(html),
+      `${file} 免責聲明裡的網址沒有做成連結`);
 
     // 內嵌的 I18N 就是該語系的字典
     const inline = JSON.parse(html.match(/window\.I18N = (\{.*?\});<\/script>/s)[1]);

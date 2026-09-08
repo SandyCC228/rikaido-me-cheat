@@ -35,7 +35,9 @@ for (const lang of langs) {
     .replace(/\{\{title\}\}/g, esc(L.title))
     .replace(/\{\{desc\}\}/g, esc(L.desc))
     .replace(/\{\{intro\}\}/g, esc(L.intro))
-    .replace(/\{\{disclaimer\}\}/g, esc(L.disclaimer))
+    // 文案裡的網址轉成連結，指向本尊比只寫「非官方」更清楚
+    .replace(/\{\{disclaimer\}\}/g, esc(L.disclaimer).replace('rikaido.me',
+      '<a href="https://rikaido.me/" target="_blank" rel="noopener">rikaido.me</a>'))
     .replace(/\{\{placeholder\}\}/g, esc(L.ui.placeholder))
     .replace(/\{\{search\}\}/g, esc(L.ui.search))
     .replace(/\{\{canonical\}\}/g, urlOf(lang))
