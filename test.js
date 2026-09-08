@@ -85,6 +85,50 @@ assert.strictEqual(localeOrder('x').length, 4);                          // 永�
     '全域衝突檢查失效了');
 }
 
+// build 產物：四個語系頁的 SEO 標籤要齊全且互相一致
+{
+  const fs = require('fs');
+  const i18n = JSON.parse(fs.readFileSync('./i18n.json', 'utf8'));
+  const langs = Object.keys(i18n);
+  const BASE = 'https://sandycc228.github.io/rikaido-me-cheat/';
+
+  assert.deepStrictEqual(langs, ['zh-Hant', 'ja', 'en', 'ko']);
+
+  // 每個語系的 UI 字串 key 必須一致，少一個就是某頁會露出 key 名
+  const keysOf = l => Object.keys(i18n[l].ui).sort();
+  for (const l of langs) assert.deepStrictEqual(keysOf(l), keysOf('zh-Hant'), `${l} 的 ui 字串不齊`);
+
+  for (const lang of langs) {
+    const file = i18n[lang].dir + 'index.html';
+    assert.ok(fs.existsSync(file), `${file} 不存在，先跑 node build.js`);
+    const html = fs.readFileSync(file, 'utf8');
+
+    assert.strictEqual(html.match(/\{\{\w+\}\}/g), null, `${file} 還有未替換的佔位符`);
+    assert.ok(html.includes(`<html lang="${lang}">`), `${file} 的 html lang 不對`);
+    assert.ok(html.includes(`<link rel="canonical" href="${BASE}${i18n[lang].dir}">`), `${file} canonical 不對`);
+
+    // hreflang：四語系 + x-default，五條都要在
+    for (const l of langs) {
+      assert.ok(html.includes(`hreflang="${l}" href="${BASE}${i18n[l].dir}"`), `${file} 缺 hreflang ${l}`);
+    }
+    assert.ok(html.includes('hreflang="x-default"'), `${file} 缺 x-default`);
+
+    // 資源路徑：子目錄頁要往上一層
+    const root = i18n[lang].dir ? '../' : '';
+    assert.ok(html.includes(`<script src="${root}core.js">`), `${file} core.js 路徑不對`);
+    assert.ok(html.includes(`<script src="${root}app.js">`), `${file} app.js 路徑不對`);
+    assert.ok(html.includes(`href="${root}favicon.webp"`), `${file} favicon 路徑不對`);
+
+    // 內嵌的 I18N 就是該語系的字典
+    const inline = JSON.parse(html.match(/window\.I18N = (\{.*?\});<\/script>/s)[1]);
+    assert.deepStrictEqual(inline, i18n[lang].ui, `${file} 內嵌的 I18N 與 i18n.json 不符`);
+  }
+
+  const sitemap = fs.readFileSync('./sitemap.xml', 'utf8');
+  for (const lang of langs) assert.ok(sitemap.includes(`<loc>${BASE}${i18n[lang].dir}</loc>`), `sitemap 缺 ${lang}`);
+  assert.ok(fs.readFileSync('./robots.txt', 'utf8').includes(`Sitemap: ${BASE}sitemap.xml`), 'robots.txt 缺 sitemap');
+}
+
 console.log('✓ core.js 全部通過');
 
 // fetchQuiz：一次 batchGet 四個 collection，認出語系

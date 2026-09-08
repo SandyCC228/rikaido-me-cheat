@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sandycc228.github.io/rikaido-me-cheat/sitemap.xml

@@ -1,22 +1,22 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="ko">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>rikaido 正解查詢</title>
-<meta name="description" content="查詢 rikaido.me 任一份 quiz 的題目與正解，貼上網址就能看到全部答案，也可以直接送出一筆成績。">
-<link rel="canonical" href="https://sandycc228.github.io/rikaido-me-cheat/">
-<link rel="icon" type="image/webp" href="favicon.webp">
-<link rel="apple-touch-icon" href="favicon.webp">
+<title>rikaido 정답 조회</title>
+<meta name="description" content="rikaido.me 퀴즈의 문제와 정답을 한 번에 확인하세요. URL만 붙여넣으면 되고, 점수 제출도 가능합니다.">
+<link rel="canonical" href="https://sandycc228.github.io/rikaido-me-cheat/ko/">
+<link rel="icon" type="image/webp" href="../favicon.webp">
+<link rel="apple-touch-icon" href="../favicon.webp">
 <link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/">
 <link rel="alternate" hreflang="ja" href="https://sandycc228.github.io/rikaido-me-cheat/ja/">
 <link rel="alternate" hreflang="en" href="https://sandycc228.github.io/rikaido-me-cheat/en/">
 <link rel="alternate" hreflang="ko" href="https://sandycc228.github.io/rikaido-me-cheat/ko/">
 <link rel="alternate" hreflang="x-default" href="https://sandycc228.github.io/rikaido-me-cheat/en/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="rikaido 正解查詢">
-<meta property="og:description" content="查詢 rikaido.me 任一份 quiz 的題目與正解，貼上網址就能看到全部答案，也可以直接送出一筆成績。">
-<meta property="og:url" content="https://sandycc228.github.io/rikaido-me-cheat/">
-<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="rikaido 정답 조회">
+<meta property="og:description" content="rikaido.me 퀴즈의 문제와 정답을 한 번에 확인하세요. URL만 붙여넣으면 되고, 점수 제출도 가능합니다.">
+<meta property="og:url" content="https://sandycc228.github.io/rikaido-me-cheat/ko/">
+<meta property="og:locale" content="ko_KR">
 <meta name="twitter:card" content="summary">
 <style>
   :root {
@@ -120,22 +120,22 @@
 </style>
 <body>
 <main>
-  <h1>rikaido 正解查詢</h1>
-  <p class="intro">貼上 rikaido 的 quiz 網址或 id，就能看到那份 quiz 的全部題目與正解。日文、繁體中文、英文、韓文四個版本都支援。</p>
+  <h1>rikaido 정답 조회</h1>
+  <p class="intro">rikaido 퀴즈 URL이나 ID를 붙여넣으면 해당 퀴즈의 모든 문제와 정답을 볼 수 있습니다. 일본어·번체 중국어·영어·한국어 네 가지 버전을 지원합니다.</p>
   <form id="ask">
-    <input id="input" placeholder="貼上 quiz 網址或 id" required autocomplete="off"
-           aria-label="貼上 quiz 網址或 id">
-    <button>查詢</button>
+    <input id="input" placeholder="퀴즈 URL 또는 ID 붙여넣기" required autocomplete="off"
+           aria-label="퀴즈 URL 또는 ID 붙여넣기">
+    <button>조회</button>
   </form>
   <p id="status"></p>
   <div id="result"></div>
-  <nav class="langs"><span>繁體中文</span>
+  <nav class="langs"><a href="https://sandycc228.github.io/rikaido-me-cheat/" hreflang="zh-Hant">繁體中文</a>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/ja/" hreflang="ja">日本語</a>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/en/" hreflang="en">English</a>
-    <a href="https://sandycc228.github.io/rikaido-me-cheat/ko/" hreflang="ko">한국어</a></nav>
+    <span>한국어</span></nav>
 </main>
-<script>window.I18N = {"placeholder":"貼上 quiz 網址或 id","search":"查詢","searching":"查詢中…","notFound":"找不到這個 quiz，確認網址是否正確","owner":"出題者「{owner}」・{n} 題","fallback":"題庫載入失敗，只能顯示 A／B。","answerIs":"正解：{ab}","sendSummary":"懶得點，直接幫我送出一筆","sendNote":"這會真的寫進這份 quiz 的排行榜，出題者看得到。","name":"暱稱","score":"分數","send":"送出","sending":"送出中…","needName":"要填暱稱","badScore":"分數要是 0~{max} 的整數","sent":"送出成功。","sentLink":"去看排行榜","sendFail":"送出失敗："};</script>
-<script src="core.js"></script>
-<script src="app.js"></script>
+<script>window.I18N = {"placeholder":"퀴즈 URL 또는 ID 붙여넣기","search":"조회","searching":"조회 중…","notFound":"해당 퀴즈를 찾을 수 없습니다. URL을 확인해 주세요","owner":"출제자 「{owner}」 · {n}문항","fallback":"문제 데이터를 불러오지 못했습니다. A／B만 표시합니다.","answerIs":"정답：{ab}","sendSummary":"풀기 귀찮으니 점수만 보내기","sendNote":"이 퀴즈의 순위표에 실제로 기록되며 출제자가 볼 수 있습니다.","name":"닉네임","score":"점수","send":"보내기","sending":"보내는 중…","needName":"닉네임을 입력하세요","badScore":"점수는 0~{max} 사이의 정수여야 합니다","sent":"전송 완료. ","sentLink":"순위표 보기","sendFail":"전송 실패: "};</script>
+<script src="../core.js"></script>
+<script src="../app.js"></script>
 </body>
 </html>

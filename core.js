@@ -86,7 +86,11 @@
       const found = await quizDoc(locale, quizId);
       if (found) { hit = { locale, found }; break; }
     }
-    if (!hit) throw new Error('找不到 quiz ' + quizId);
+    if (!hit) {
+      const err = new Error('找不到 quiz ' + quizId);
+      err.code = 'NOT_FOUND';        // 網頁端據此顯示該語系的訊息
+      throw err;
+    }
 
     const { locale, found } = hit;
     const f = found.fields;

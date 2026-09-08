@@ -1,22 +1,22 @@
 <!doctype html>
-<html lang="zh-Hant">
+<html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>rikaido 正解查詢</title>
-<meta name="description" content="查詢 rikaido.me 任一份 quiz 的題目與正解，貼上網址就能看到全部答案，也可以直接送出一筆成績。">
-<link rel="canonical" href="https://sandycc228.github.io/rikaido-me-cheat/">
-<link rel="icon" type="image/webp" href="favicon.webp">
-<link rel="apple-touch-icon" href="favicon.webp">
+<title>rikaido Answer Key</title>
+<meta name="description" content="Look up the questions and correct answers for any rikaido.me quiz. Paste a URL to see every answer, or submit a score directly.">
+<link rel="canonical" href="https://sandycc228.github.io/rikaido-me-cheat/en/">
+<link rel="icon" type="image/webp" href="../favicon.webp">
+<link rel="apple-touch-icon" href="../favicon.webp">
 <link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/">
 <link rel="alternate" hreflang="ja" href="https://sandycc228.github.io/rikaido-me-cheat/ja/">
 <link rel="alternate" hreflang="en" href="https://sandycc228.github.io/rikaido-me-cheat/en/">
 <link rel="alternate" hreflang="ko" href="https://sandycc228.github.io/rikaido-me-cheat/ko/">
 <link rel="alternate" hreflang="x-default" href="https://sandycc228.github.io/rikaido-me-cheat/en/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="rikaido 正解查詢">
-<meta property="og:description" content="查詢 rikaido.me 任一份 quiz 的題目與正解，貼上網址就能看到全部答案，也可以直接送出一筆成績。">
-<meta property="og:url" content="https://sandycc228.github.io/rikaido-me-cheat/">
-<meta property="og:locale" content="zh_TW">
+<meta property="og:title" content="rikaido Answer Key">
+<meta property="og:description" content="Look up the questions and correct answers for any rikaido.me quiz. Paste a URL to see every answer, or submit a score directly.">
+<meta property="og:url" content="https://sandycc228.github.io/rikaido-me-cheat/en/">
+<meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary">
 <style>
   :root {
@@ -120,22 +120,22 @@
 </style>
 <body>
 <main>
-  <h1>rikaido 正解查詢</h1>
-  <p class="intro">貼上 rikaido 的 quiz 網址或 id，就能看到那份 quiz 的全部題目與正解。日文、繁體中文、英文、韓文四個版本都支援。</p>
+  <h1>rikaido Answer Key</h1>
+  <p class="intro">Paste a rikaido quiz URL or ID to see every question with its correct answer. All four editions are supported: Japanese, Traditional Chinese, English and Korean.</p>
   <form id="ask">
-    <input id="input" placeholder="貼上 quiz 網址或 id" required autocomplete="off"
-           aria-label="貼上 quiz 網址或 id">
-    <button>查詢</button>
+    <input id="input" placeholder="Paste a quiz URL or ID" required autocomplete="off"
+           aria-label="Paste a quiz URL or ID">
+    <button>Look up</button>
   </form>
   <p id="status"></p>
   <div id="result"></div>
-  <nav class="langs"><span>繁體中文</span>
+  <nav class="langs"><a href="https://sandycc228.github.io/rikaido-me-cheat/" hreflang="zh-Hant">繁體中文</a>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/ja/" hreflang="ja">日本語</a>
-    <a href="https://sandycc228.github.io/rikaido-me-cheat/en/" hreflang="en">English</a>
+    <span>English</span>
     <a href="https://sandycc228.github.io/rikaido-me-cheat/ko/" hreflang="ko">한국어</a></nav>
 </main>
-<script>window.I18N = {"placeholder":"貼上 quiz 網址或 id","search":"查詢","searching":"查詢中…","notFound":"找不到這個 quiz，確認網址是否正確","owner":"出題者「{owner}」・{n} 題","fallback":"題庫載入失敗，只能顯示 A／B。","answerIs":"正解：{ab}","sendSummary":"懶得點，直接幫我送出一筆","sendNote":"這會真的寫進這份 quiz 的排行榜，出題者看得到。","name":"暱稱","score":"分數","send":"送出","sending":"送出中…","needName":"要填暱稱","badScore":"分數要是 0~{max} 的整數","sent":"送出成功。","sentLink":"去看排行榜","sendFail":"送出失敗："};</script>
-<script src="core.js"></script>
-<script src="app.js"></script>
+<script>window.I18N = {"placeholder":"Paste a quiz URL or ID","search":"Look up","searching":"Looking up…","notFound":"No such quiz. Check the URL and try again","owner":"By {owner} · {n} questions","fallback":"Could not load the question set — showing A/B only.","answerIs":"Answer: {ab}","sendSummary":"Skip the quiz, just submit a score for me","sendNote":"This really does write to this quiz's leaderboard. Its author can see it.","name":"Name","score":"Score","send":"Submit","sending":"Submitting…","needName":"Enter a name","badScore":"Score must be a whole number from 0 to {max}","sent":"Submitted. ","sentLink":"View the leaderboard","sendFail":"Failed: "};</script>
+<script src="../core.js"></script>
+<script src="../app.js"></script>
 </body>
 </html>
