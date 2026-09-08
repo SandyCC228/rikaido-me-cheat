@@ -65,8 +65,20 @@ base：`https://firestore.googleapis.com/v1/projects/rikaido-9qu1/databases/(def
 | `/en/?q=`   | `quizzes_en`  | `/js/questions-en.js` |
 | `/ko/?q=`   | `quizzes_ko`  | `/js/questions-ko.js` |
 
-**不從網址路徑判斷語系**。`batchGet` 一次帶四個 collection 的同一個 id，哪個回 `found`
-就是哪個語系。一個請求解決，且純 quiz id 也能用。
+**依序**試各語系的 collection，命中就停。順序：網址路徑指定的語系排第一
+（`rikaido.me/` 即日文），其餘按 `tw → ja → en → ko` 遞補。純 quiz id 也能用，
+只是沒有線索，從繁中開始試。
+
+兩個都不能做：
+
+- 四個路徑塞進同一個 `batchGet` → 整批 403。Firestore 的安全規則對**不存在的文件**
+  一律回 403（實測 `quizzes_tw/notexist123` 亦然，與語系無關），而一份 quiz 只屬於
+  一個語系。
+- 四個 collection 並行各查一次 → 命中的只有一個，另外三個必然 403，瀏覽器 console
+  會留下三行紅字，無法從 JS 抑制。
+
+依序查則常見情況（貼 tw 網址、或 tw 的 id）只發 1 個請求、0 個錯誤；代價是查其他語系
+時多幾次往返。
 
 ## 資料格式
 

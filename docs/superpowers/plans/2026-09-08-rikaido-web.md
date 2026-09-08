@@ -258,6 +258,11 @@ Expected: FAIL，`fetchQuiz is not a function`
 
 - [ ] **Step 3: 在 core.js 實作 fetchQuiz**
 
+> 執行時修正：下面這版把四個路徑塞進同一個 `batchGet`，實際會整批 403——Firestore
+> 規則對不存在的文件一律拒絕，而 quiz 只屬於一個語系。已改為四個 collection 並行
+> 各發一次 `batchGet`，以 `core.js` 的實作為準。
+
+
 加在 `buildWrite` 之後、`API` 之前：
 
 ```js
