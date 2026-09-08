@@ -7,8 +7,8 @@
 ```
 index.html（日文）  en/  ko/  tw/    產生出來的四個語系頁，不要直接改
 favicon.webp  robots.txt  sitemap.xml
-assets/     core.js（CLI 與網頁共用）、app.js（網頁）
-src/        i18n.json（文案）、template.html（版型）、build.js
+assets/     core.js（CLI 與網頁共用）、app.js（網頁）、questions/（題庫快照）
+src/        i18n.json（文案）、template.html（版型）、build.js、fetch-questions.js
 cli/        cheat.js 與範例清單
 test.js     node test.js
 serve.js    本機預覽
@@ -40,6 +40,19 @@ node src/build.js
 
 文案改 `src/i18n.json`，版型改 `src/template.html`，跑一次就會重出四個 HTML 加
 `sitemap.xml`、`robots.txt`。產物 commit 進 repo，GitHub Pages 直接 serve，沒有 CI。
+
+## 題庫
+
+網頁與 CLI 平常載 rikaido 官方的題庫檔，永遠是最新的；載不到才用
+`assets/questions/` 的快照。快照由 GitHub Actions 每天同步，有變動才 commit，
+也可以手動跑：
+
+```
+node src/fetch-questions.js
+```
+
+各語系的題庫是各自獨立的題庫，不是同一批題目的翻譯，題目 index 不能跨語系對照。
+所以題目文字一律是該 quiz 原本的語言，只有介面字串會跟著頁面語系。
 
 ## 測試
 

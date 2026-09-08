@@ -9,15 +9,23 @@ const DRY = process.argv.includes('--dry');
 
 const { FS, toQuizId, spread, capOf, buildWrite, fetchQuiz } = require('../assets/core.js');
 
+// 先要官方的最新版，載不到才用 assets/questions/ 的快照
 const qsCache = new Map();
-function questions(url, v) {
-  if (!qsCache.has(url)) qsCache.set(url, (async () => {
-    const src = await (await fetch(url)).text();
+function questions({ locale, questionsUrl, v }) {
+  if (!qsCache.has(locale)) qsCache.set(locale, (async () => {
+    let src;
+    try {
+      const res = await fetch(questionsUrl);
+      if (!res.ok) throw new Error(res.status);
+      src = await res.text();
+    } catch {
+      src = fs.readFileSync(`${__dirname}/../assets/questions/${locale}.js`, 'utf8');
+    }
     const w = {};
     new Function('window', src)(w);
     return w.RIKAIDO_QUESTIONS.sets[v] || w.RIKAIDO_QUESTIONS.sets[1];
   })());
-  return qsCache.get(url);
+  return qsCache.get(locale);
 }
 
 const quizCache = new Map();
@@ -31,8 +39,9 @@ function quiz(input) {
 async function submit(quizIdOrUrl, nameArg, scoreArg, countArg) {
   const quizId = toQuizId(quizIdOrUrl);
   if (!quizId || !nameArg) throw new Error('要有 quizId 和暱稱');
-  const { answers, qids, owner, collection, questionsUrl, v } = await quiz(quizIdOrUrl);
-  const qs = await questions(questionsUrl, v);
+  const q = await quiz(quizIdOrUrl);
+  const { answers, qids, owner, collection } = q;
+  const qs = await questions(q);
   const total = qids.length;
 
   const score = scoreArg === undefined || scoreArg === '' ? total : Number(scoreArg);

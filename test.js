@@ -127,6 +127,15 @@ assert.strictEqual(localeOrder('x').length, 4);                          // 永�
     assert.deepStrictEqual(inline, i18n[lang].ui, `${file} 內嵌的 I18N 與 i18n.json 不符`);
   }
 
+  // 題庫快照：四份都在，而且真的是題庫
+  for (const code of ['ja', 'en', 'ko', 'tw']) {
+    const file = `./assets/questions/${code}.js`;
+    assert.ok(fs.existsSync(file), `${file} 不存在，先跑 node src/fetch-questions.js`);
+    const w = {};
+    new Function('window', fs.readFileSync(file, 'utf8'))(w);
+    assert.ok(w.RIKAIDO_QUESTIONS?.sets?.[1]?.length > 0, `${file} 不是題庫`);
+  }
+
   const sitemap = fs.readFileSync('./sitemap.xml', 'utf8');
   for (const lang of langs) assert.ok(sitemap.includes(`<loc>${BASE}${i18n[lang].dir}</loc>`), `sitemap 缺 ${lang}`);
   assert.ok(fs.readFileSync('./robots.txt', 'utf8').includes(`Sitemap: ${BASE}sitemap.xml`), 'robots.txt 缺 sitemap');

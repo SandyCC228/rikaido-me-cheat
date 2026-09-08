@@ -12,21 +12,28 @@
     return n;
   };
 
-  // 題庫只能用 script 標籤載（fetch 會被 CORS 擋）；失敗回 null 走降級
+  // 題庫只能用 script 標籤載（fetch 會被 CORS 擋）
+  const ASSETS = new URL('.', document.currentScript.src).href;
+  const inject = src => new Promise(res => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = () => res(true);
+    s.onerror = () => res(false);
+    document.head.appendChild(s);
+  });
+
+  // 先要官方的最新版，載不到才用 assets/questions/ 的快照；都沒有就回 null 走降級
   const loaded = new Map();
-  function loadQuestions(url, v) {
-    if (!loaded.has(url)) loaded.set(url, new Promise(res => {
-      const s = document.createElement('script');
-      s.src = url;
-      s.onload = () => {
-        const Q = window.RIKAIDO_QUESTIONS;
-        const set = Q?.sets?.[v] || Q?.sets?.[1];
-        res(set ? { set, genres: Q.genres || {} } : null);
-      };
-      s.onerror = () => res(null);
-      document.head.appendChild(s);
-    }));
-    return loaded.get(url);
+  function loadQuestions(quiz) {
+    if (!loaded.has(quiz.locale)) loaded.set(quiz.locale, (async () => {
+      const ok = await inject(quiz.questionsUrl)
+        || await inject(`${ASSETS}questions/${quiz.locale}.js`);
+      if (!ok) return null;
+      const Q = window.RIKAIDO_QUESTIONS;
+      const set = Q?.sets?.[quiz.v] || Q?.sets?.[1];
+      return set ? { set, genres: Q.genres || {} } : null;
+    })());
+    return loaded.get(quiz.locale);
   }
 
   // 查過的 quiz 存在本機供 datalist 建議；表單被 preventDefault，瀏覽器不會自己記錄
@@ -49,7 +56,7 @@
     $('status').textContent = t('searching');
     try {
       const quiz = await fetchQuiz($('input').value.trim());   // 傳原始輸入，網址裡有語系線索
-      const qs = await loadQuestions(quiz.questionsUrl, quiz.v);
+      const qs = await loadQuestions(quiz);
       $('status').textContent = '';
       remember(quiz.id);
       render(quiz, qs);
