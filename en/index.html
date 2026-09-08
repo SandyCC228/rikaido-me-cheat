@@ -7,10 +7,10 @@
 <link rel="canonical" href="https://sandycc228.github.io/rikaido-me-cheat/en/">
 <link rel="icon" type="image/webp" href="../favicon.webp">
 <link rel="apple-touch-icon" href="../favicon.webp">
-<link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/">
 <link rel="alternate" hreflang="ja" href="https://sandycc228.github.io/rikaido-me-cheat/ja/">
 <link rel="alternate" hreflang="en" href="https://sandycc228.github.io/rikaido-me-cheat/en/">
 <link rel="alternate" hreflang="ko" href="https://sandycc228.github.io/rikaido-me-cheat/ko/">
+<link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/">
 <link rel="alternate" hreflang="x-default" href="https://sandycc228.github.io/rikaido-me-cheat/en/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="rikaido Answer Key">
@@ -121,21 +121,22 @@
 <body>
 <main>
   <h1>rikaido Answer Key</h1>
-  <p class="intro">Paste a rikaido quiz URL or ID to see every question with its correct answer. All four editions are supported: Japanese, Traditional Chinese, English and Korean.</p>
+  <p class="intro">Paste a rikaido quiz URL or ID to see every question with its correct answer.</p>
   <form id="ask">
-    <input id="input" placeholder="Paste a quiz URL or ID" required autocomplete="off"
-           aria-label="Paste a quiz URL or ID">
+    <input id="input" name="q" placeholder="Paste a quiz URL or ID" required
+           list="recent" aria-label="Paste a quiz URL or ID">
+    <datalist id="recent"></datalist>
     <button>Look up</button>
   </form>
   <p id="status"></p>
   <div id="result"></div>
-  <nav class="langs"><a href="https://sandycc228.github.io/rikaido-me-cheat/" hreflang="zh-Hant">繁體中文</a>
-    <a href="https://sandycc228.github.io/rikaido-me-cheat/ja/" hreflang="ja">日本語</a>
+  <nav class="langs"><a href="https://sandycc228.github.io/rikaido-me-cheat/ja/" hreflang="ja">日本語</a>
     <span>English</span>
-    <a href="https://sandycc228.github.io/rikaido-me-cheat/ko/" hreflang="ko">한국어</a></nav>
+    <a href="https://sandycc228.github.io/rikaido-me-cheat/ko/" hreflang="ko">한국어</a>
+    <a href="https://sandycc228.github.io/rikaido-me-cheat/" hreflang="zh-Hant">繁體中文</a></nav>
 </main>
-<script>window.I18N = {"placeholder":"Paste a quiz URL or ID","search":"Look up","searching":"Looking up…","notFound":"No such quiz. Check the URL and try again","owner":"By {owner} · {n} questions","fallback":"Could not load the question set — showing A/B only.","answerIs":"Answer: {ab}","sendSummary":"Skip the quiz, just submit a score for me","sendNote":"This really does write to this quiz's leaderboard. Its author can see it.","name":"Name","score":"Score","send":"Submit","sending":"Submitting…","needName":"Enter a name","badScore":"Score must be a whole number from 0 to {max}","sent":"Submitted. ","sentLink":"View the leaderboard","sendFail":"Failed: "};</script>
-<script src="../core.js"></script>
-<script src="../app.js"></script>
+<script>window.I18N = {"placeholder":"Paste a quiz URL or ID","search":"Look up","searching":"Looking up…","notFound":"No such quiz. Check the URL and try again","owner":"{owner}'s quiz · {n} questions","fallback":"Could not load the question set — showing A/B only.","answerIs":"Answer: {ab}","sendSummary":"Skip the quiz, just submit a score","sendNote":"This really does write to this quiz's ranking. Its creator can see it.","name":"Nickname","score":"Score","send":"Submit","sending":"Submitting…","needName":"Enter a nickname","badScore":"Score must be a whole number from 0 to {max}","sent":"Submitted. ","sentLink":"View the ranking","sendFail":"Failed: "};</script>
+<script src="../assets/core.js"></script>
+<script src="../assets/app.js"></script>
 </body>
 </html>

@@ -7,7 +7,7 @@ const readline = require('node:readline/promises');
 const args = process.argv.slice(2).filter(a => !a.startsWith('--'));
 const DRY = process.argv.includes('--dry');
 
-const { FS, toQuizId, spread, capOf, buildWrite, fetchQuiz } = require('./core.js');
+const { FS, toQuizId, spread, capOf, buildWrite, fetchQuiz } = require('../assets/core.js');
 
 const qsCache = new Map();
 function questions(url, v) {

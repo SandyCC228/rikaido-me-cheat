@@ -3,13 +3,14 @@
 const fs = require('fs');
 const path = require('path');
 
+const ROOT = path.join(__dirname, '..');   // 產物寫到 repo 根，Pages 從那裡 serve
 const BASE = 'https://sandycc228.github.io/rikaido-me-cheat/';   // 綁自訂網域改這裡
 const X_DEFAULT = 'en';   // 沒有匹配語言時給國際訪客看英文
 
 const OG_LOCALE = { 'zh-Hant': 'zh_TW', ja: 'ja_JP', en: 'en_US', ko: 'ko_KR' };
 
-const i18n = JSON.parse(fs.readFileSync('i18n.json', 'utf8'));
-const template = fs.readFileSync('template.html', 'utf8');
+const i18n = JSON.parse(fs.readFileSync(path.join(__dirname, 'i18n.json'), 'utf8'));
+const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 const langs = Object.keys(i18n);
 
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -46,13 +47,13 @@ for (const lang of langs) {
   const left = html.match(/\{\{\w+\}\}/g);
   if (left) throw new Error(`${lang}：還有未替換的佔位符 ${[...new Set(left)].join(', ')}`);
 
-  const out = path.join(L.dir, 'index.html');
-  if (L.dir) fs.mkdirSync(L.dir, { recursive: true });
+  const out = path.join(ROOT, L.dir, 'index.html');
+  if (L.dir) fs.mkdirSync(path.join(ROOT, L.dir), { recursive: true });
   fs.writeFileSync(out, html);
-  console.log('寫入', out);
+  console.log('寫入', path.relative(ROOT, out));
 }
 
-fs.writeFileSync('sitemap.xml', [
+fs.writeFileSync(path.join(ROOT, 'sitemap.xml'), [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">',
   ...langs.map(lang => [
@@ -67,5 +68,5 @@ fs.writeFileSync('sitemap.xml', [
 ].join('\n'));
 console.log('寫入 sitemap.xml');
 
-fs.writeFileSync('robots.txt', `User-agent: *\nAllow: /\n\nSitemap: ${BASE}sitemap.xml\n`);
+fs.writeFileSync(path.join(ROOT, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${BASE}sitemap.xml\n`);
 console.log('寫入 robots.txt');

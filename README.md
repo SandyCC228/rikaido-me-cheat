@@ -2,16 +2,28 @@
 
 查 [rikaido.me](https://rikaido.me) 上某份 quiz 的題目與正解，也可以直接送一筆成績進它的排行榜。
 
+## 結構
+
+```
+index.html  ja/  en/  ko/    產生出來的四個語系頁，不要直接改
+favicon.webp  robots.txt  sitemap.xml
+assets/     core.js（CLI 與網頁共用）、app.js（網頁）
+src/        i18n.json（文案）、template.html（版型）、build.js
+cli/        cheat.js 與範例清單
+test.js     node test.js
+serve.js    本機預覽
+```
+
 ## CLI
 
 ```
-node cheat.js                  # 問答模式：依序問 quiz、暱稱、分數、次數
-node cheat.js <quizId|網址>     # 看排行榜
-node cheat.js <清單.txt>        # 批次，每行 quizId,暱稱,分數,次數
-node cheat.js <清單.txt> --dry  # 只印 payload，不送出
+node cli/cheat.js                  # 問答模式：依序問 quiz、暱稱、分數、次數
+node cli/cheat.js <quizId|網址>     # 看排行榜
+node cli/cheat.js <清單.txt>        # 批次，每行 quizId,暱稱,分數,次數
+node cli/cheat.js <清單.txt> --dry  # 只印 payload，不送出
 ```
 
-清單格式（分數留空 = 滿分，次數留空 = 1）：
+清單格式見 `cli/batch.example.txt`（分數留空 = 滿分，次數留空 = 1）：
 
 ```
 dek3wath6y,小明,30,1
@@ -22,14 +34,12 @@ dek3wath6y,路人,,5
 
 ## 網頁的文案與頁面
 
-四個語系頁（`/`、`/ja/`、`/en/`、`/ko/`）都是產生出來的，不要直接改 `index.html`：
-
 ```
-node build.js
+node src/build.js
 ```
 
-文案改 `i18n.json`，版型改 `template.html`，跑一次就會重出四個 HTML 加 `sitemap.xml`、
-`robots.txt`。產物 commit 進 repo，GitHub Pages 直接 serve，沒有 CI。
+文案改 `src/i18n.json`，版型改 `src/template.html`，跑一次就會重出四個 HTML 加
+`sitemap.xml`、`robots.txt`。產物 commit 進 repo，GitHub Pages 直接 serve，沒有 CI。
 
 ## 測試
 

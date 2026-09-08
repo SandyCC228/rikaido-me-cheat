@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://sandycc228.github.io/rikaido-me-cheat/</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/"/>
-    <xhtml:link rel="alternate" hreflang="ja" href="https://sandycc228.github.io/rikaido-me-cheat/ja/"/>
-    <xhtml:link rel="alternate" hreflang="en" href="https://sandycc228.github.io/rikaido-me-cheat/en/"/>
-    <xhtml:link rel="alternate" hreflang="ko" href="https://sandycc228.github.io/rikaido-me-cheat/ko/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://sandycc228.github.io/rikaido-me-cheat/en/"/>
-  </url>
-  <url>
     <loc>https://sandycc228.github.io/rikaido-me-cheat/ja/</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://sandycc228.github.io/rikaido-me-cheat/ja/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://sandycc228.github.io/rikaido-me-cheat/en/"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://sandycc228.github.io/rikaido-me-cheat/ko/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://sandycc228.github.io/rikaido-me-cheat/en/"/>
   </url>
   <url>
     <loc>https://sandycc228.github.io/rikaido-me-cheat/en/</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://sandycc228.github.io/rikaido-me-cheat/ja/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://sandycc228.github.io/rikaido-me-cheat/en/"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://sandycc228.github.io/rikaido-me-cheat/ko/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://sandycc228.github.io/rikaido-me-cheat/en/"/>
   </url>
   <url>
     <loc>https://sandycc228.github.io/rikaido-me-cheat/ko/</loc>
-    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/"/>
     <xhtml:link rel="alternate" hreflang="ja" href="https://sandycc228.github.io/rikaido-me-cheat/ja/"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://sandycc228.github.io/rikaido-me-cheat/en/"/>
     <xhtml:link rel="alternate" hreflang="ko" href="https://sandycc228.github.io/rikaido-me-cheat/ko/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://sandycc228.github.io/rikaido-me-cheat/en/"/>
+  </url>
+  <url>
+    <loc>https://sandycc228.github.io/rikaido-me-cheat/</loc>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://sandycc228.github.io/rikaido-me-cheat/ja/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://sandycc228.github.io/rikaido-me-cheat/en/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://sandycc228.github.io/rikaido-me-cheat/ko/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://sandycc228.github.io/rikaido-me-cheat/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://sandycc228.github.io/rikaido-me-cheat/en/"/>
   </url>
 </urlset>

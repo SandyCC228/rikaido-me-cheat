@@ -1,5 +1,5 @@
 const assert = require('assert');
-const { LOCALES, toQuizId, autoId, spread, capOf, buildWrite } = require('./core.js');
+const { LOCALES, toQuizId, autoId, spread, capOf, buildWrite } = require('./assets/core.js');
 
 // toQuizId：四語系網址、純 id、無效字串
 assert.strictEqual(toQuizId('https://rikaido.me/tw/?q=dek3wath6y'), 'dek3wath6y');
@@ -56,7 +56,7 @@ assert.deepStrictEqual(w.currentDocument, { exists: false });
 
 // localeOrder：網址裡的語系排第一，其餘按 tw→ja→en→ko 遞補；
 // 依序查才不會對其他語系發出必然 403 的請求（瀏覽器 console 會印紅字）
-const { localeOrder } = require('./core.js');
+const { localeOrder } = require('./assets/core.js');
 const codes = input => localeOrder(input).map(l => l.code);
 assert.deepStrictEqual(codes('https://rikaido.me/tw/?q=x'), ['tw', 'ja', 'en', 'ko']);
 assert.deepStrictEqual(codes('https://rikaido.me/?q=x'), ['ja', 'tw', 'en', 'ko']);
@@ -73,7 +73,7 @@ assert.strictEqual(localeOrder('x').length, 4);                          // 永�
   const PAGE = 'const { fetchQuiz, toQuizId, capOf, spread, buildWrite, FS, LOCALES } = window.CHEAT_CORE;';
 
   const ctx = vm.createContext({ window: {}, fetch: () => {}, URL });
-  vm.runInContext(require('fs').readFileSync('./core.js', 'utf8'), ctx);
+  vm.runInContext(require('fs').readFileSync('./assets/core.js', 'utf8'), ctx);
   assert.ok(ctx.window.CHEAT_CORE, 'core.js 應把 API 掛在 window.CHEAT_CORE');
   assert.strictEqual(typeof ctx.window.CHEAT_CORE.fetchQuiz, 'function');
   vm.runInContext(PAGE, ctx);   // 不該拋
@@ -88,15 +88,15 @@ assert.strictEqual(localeOrder('x').length, 4);                          // 永�
 // build 產物：四個語系頁的 SEO 標籤要齊全且互相一致
 {
   const fs = require('fs');
-  const i18n = JSON.parse(fs.readFileSync('./i18n.json', 'utf8'));
+  const i18n = JSON.parse(fs.readFileSync('./src/i18n.json', 'utf8'));
   const langs = Object.keys(i18n);
   const BASE = 'https://sandycc228.github.io/rikaido-me-cheat/';
 
-  assert.deepStrictEqual(langs, ['zh-Hant', 'ja', 'en', 'ko']);
+  assert.deepStrictEqual(langs, ['ja', 'en', 'ko', 'zh-Hant']);   // 語言列的排序就是這個順序
 
   // 每個語系的 UI 字串 key 必須一致，少一個就是某頁會露出 key 名
   const keysOf = l => Object.keys(i18n[l].ui).sort();
-  for (const l of langs) assert.deepStrictEqual(keysOf(l), keysOf('zh-Hant'), `${l} 的 ui 字串不齊`);
+  for (const l of langs) assert.deepStrictEqual(keysOf(l), keysOf('ja'), `${l} 的 ui 字串不齊`);
 
   for (const lang of langs) {
     const file = i18n[lang].dir + 'index.html';
@@ -115,8 +115,8 @@ assert.strictEqual(localeOrder('x').length, 4);                          // 永�
 
     // 資源路徑：子目錄頁要往上一層
     const root = i18n[lang].dir ? '../' : '';
-    assert.ok(html.includes(`<script src="${root}core.js">`), `${file} core.js 路徑不對`);
-    assert.ok(html.includes(`<script src="${root}app.js">`), `${file} app.js 路徑不對`);
+    assert.ok(html.includes(`<script src="${root}assets/core.js">`), `${file} core.js 路徑不對`);
+    assert.ok(html.includes(`<script src="${root}assets/app.js">`), `${file} app.js 路徑不對`);
     assert.ok(html.includes(`href="${root}favicon.webp"`), `${file} favicon 路徑不對`);
 
     // 內嵌的 I18N 就是該語系的字典
@@ -133,7 +133,7 @@ console.log('✓ core.js 全部通過');
 
 // fetchQuiz：一次 batchGet 四個 collection，認出語系
 (async () => {
-  const { fetchQuiz } = require('./core.js');
+  const { fetchQuiz } = require('./assets/core.js');
   const q = await fetchQuiz('dek3wath6y');
   assert.strictEqual(q.locale, 'tw');
   assert.strictEqual(q.collection, 'quizzes_tw');

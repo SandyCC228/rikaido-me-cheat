@@ -29,6 +29,21 @@
     return loaded.get(url);
   }
 
+  // 查過的 quiz 記在本機，下次點輸入框就有建議。
+  // 不靠瀏覽器的表單歷史：表單被 preventDefault，多數瀏覽器不會記錄。
+  const KEY = 'rikaido-recent';
+  const readRecent = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
+  function fillRecent(ids) {
+    $('recent').innerHTML = '';
+    ids.forEach(v => $('recent').append(Object.assign(document.createElement('option'), { value: v })));
+  }
+  function remember(id) {
+    const ids = [id, ...readRecent().filter(x => x !== id)].slice(0, 10);
+    try { localStorage.setItem(KEY, JSON.stringify(ids)); } catch { /* 無痕模式等等 */ }
+    fillRecent(ids);
+  }
+  fillRecent(readRecent());
+
   $('ask').onsubmit = async e => {
     e.preventDefault();
     $('result').innerHTML = '';
@@ -37,6 +52,7 @@
       const quiz = await fetchQuiz($('input').value.trim());   // 傳原始輸入，網址裡有語系線索
       const qs = await loadQuestions(quiz.questionsUrl, quiz.v);
       $('status').textContent = '';
+      remember(quiz.id);
       render(quiz, qs);
     } catch (err) {
       $('status').textContent = err.code === 'NOT_FOUND' ? t('notFound') : err.message;

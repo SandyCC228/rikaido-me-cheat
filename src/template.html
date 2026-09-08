@@ -119,8 +119,9 @@
   <h1>{{title}}</h1>
   <p class="intro">{{intro}}</p>
   <form id="ask">
-    <input id="input" placeholder="{{placeholder}}" required autocomplete="off"
-           aria-label="{{placeholder}}">
+    <input id="input" name="q" placeholder="{{placeholder}}" required
+           list="recent" aria-label="{{placeholder}}">
+    <datalist id="recent"></datalist>
     <button>{{search}}</button>
   </form>
   <p id="status"></p>
@@ -128,7 +129,7 @@
   <nav class="langs">{{langnav}}</nav>
 </main>
 <script>window.I18N = {{ui}};</script>
-<script src="{{root}}core.js"></script>
-<script src="{{root}}app.js"></script>
+<script src="{{root}}assets/core.js"></script>
+<script src="{{root}}assets/app.js"></script>
 </body>
 </html>
