@@ -4,18 +4,120 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>rikaido 正解查詢</title>
 <script src="core.js"></script>
+<style>
+  :root {
+    --bg: #faf8f4;
+    --card: #fff;
+    --fg: #1e1b18;
+    --muted: #77706a;
+    --line: #e7e1d7;
+    --ok-bg: #e8f5ec;
+    --ok-fg: #1c6b3c;
+    --ok-line: #9ed4b4;
+    --warn: #a8471f;
+    --radius: 12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #17161a;
+      --card: #201f24;
+      --fg: #eceae6;
+      --muted: #9c968f;
+      --line: #33313a;
+      --ok-bg: #16341f;
+      --ok-fg: #7fd7a1;
+      --ok-line: #2f6b45;
+      --warn: #e8a07c;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 1.25rem 1rem 4rem;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 system-ui, -apple-system, "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  }
+  main { max-width: 40rem; margin: 0 auto; }
+  h1 { font-size: 1.25rem; margin: 0 0 1rem; }
+  h2 { font-size: 1rem; font-weight: 600; margin: 1.5rem 0 .75rem; }
+
+  form#ask { display: flex; gap: .5rem; flex-wrap: wrap; }
+  #input {
+    flex: 1 1 12rem; min-width: 0; padding: .7rem .85rem;
+    border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--card); color: inherit; font: inherit;
+  }
+  button {
+    padding: .7rem 1.2rem; border: 0; border-radius: var(--radius);
+    background: var(--fg); color: var(--bg);
+    font: inherit; font-weight: 600; cursor: pointer;
+  }
+  button:disabled { opacity: .5; cursor: default; }
+  #input:focus-visible, button:focus-visible, summary:focus-visible {
+    outline: 2px solid var(--ok-fg); outline-offset: 2px;
+  }
+  #status { color: var(--muted); min-height: 1.6em; }
+
+  ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+  li {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: .7rem .85rem;
+  }
+  .qhead { display: flex; gap: .5rem; align-items: baseline; }
+  .num { color: var(--muted); font-variant-numeric: tabular-nums; font-size: .85rem; }
+  .genre { font-size: .85rem; }
+  .qtext { font-weight: 600; }
+  .opts { display: grid; gap: .35rem; margin-top: .5rem; }
+  @media (min-width: 26rem) { .opts { grid-template-columns: 1fr 1fr; } }
+  .opt {
+    padding: .4rem .6rem; border: 1px solid var(--line); border-radius: 8px;
+    color: var(--muted); font-size: .95rem;
+  }
+  .opt.ok {
+    background: var(--ok-bg); border-color: var(--ok-line);
+    color: var(--ok-fg); font-weight: 700;
+  }
+  .fallback { color: var(--warn); }
+
+  details {
+    margin-top: 1.5rem; background: var(--card);
+    border: 1px solid var(--line); border-radius: var(--radius); padding: .85rem;
+  }
+  summary { cursor: pointer; font-weight: 600; }
+  details > *:not(summary) { margin-top: .75rem; }
+  .note { color: var(--warn); font-size: .9rem; }
+  label { display: block; }
+  label input {
+    display: block; width: 100%; margin-top: .25rem; padding: .6rem .75rem;
+    border: 1px solid var(--line); border-radius: 8px;
+    background: var(--bg); color: inherit; font: inherit;
+  }
+  .fields { display: grid; gap: .75rem; }
+  @media (min-width: 26rem) { .fields { grid-template-columns: 2fr 1fr; } }
+  #smsg { min-height: 1.6em; }
+  a { color: var(--ok-fg); }
+</style>
 <body>
-<h1>rikaido 正解查詢</h1>
-<form id="ask">
-  <input id="input" placeholder="貼上 quiz 網址或 id" size="40" required>
-  <button>查詢</button>
-</form>
-<p id="status"></p>
-<div id="result"></div>
+<main>
+  <h1>rikaido 正解查詢</h1>
+  <form id="ask">
+    <input id="input" placeholder="貼上 quiz 網址或 id" required autocomplete="off">
+    <button>查詢</button>
+  </form>
+  <p id="status"></p>
+  <div id="result"></div>
+</main>
 
 <script>
 const { fetchQuiz, capOf, spread, buildWrite, FS, LOCALES } = window.CHEAT_CORE;
 const $ = id => document.getElementById(id);
+const el = (tag, cls, text) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text !== undefined) n.textContent = text;
+  return n;
+};
 
 // 題庫只能用 script 標籤載（fetch 會被 CORS 擋）；失敗回 null 走降級
 const loaded = new Map();
@@ -23,7 +125,11 @@ function loadQuestions(url, v) {
   if (!loaded.has(url)) loaded.set(url, new Promise(res => {
     const s = document.createElement('script');
     s.src = url;
-    s.onload = () => res(window.RIKAIDO_QUESTIONS?.sets?.[v] || window.RIKAIDO_QUESTIONS?.sets?.[1] || null);
+    s.onload = () => {
+      const Q = window.RIKAIDO_QUESTIONS;
+      const set = Q?.sets?.[v] || Q?.sets?.[1];
+      res(set ? { set, genres: Q.genres || {} } : null);
+    };
     s.onerror = () => res(null);
     document.head.appendChild(s);
   }));
@@ -36,34 +142,40 @@ $('ask').onsubmit = async e => {
   $('status').textContent = '查詢中…';
   try {
     const quiz = await fetchQuiz($('input').value.trim());   // 傳原始輸入，網址裡有語系線索
-    const set = await loadQuestions(quiz.questionsUrl, quiz.v);
+    const qs = await loadQuestions(quiz.questionsUrl, quiz.v);
     $('status').textContent = '';
-    render(quiz, set);
+    render(quiz, qs);
   } catch (err) {
     $('status').textContent = err.message;
   }
 };
 
-function render(quiz, set) {
-  const head = document.createElement('h2');
-  head.textContent = `出題者「${quiz.owner}」・${quiz.qids.length} 題`;
-  $('result').append(head);
-
-  if (!set) $('result').append(Object.assign(document.createElement('p'),
-    { textContent: '題庫載入失敗，只能顯示 A／B。' }));
+function render(quiz, qs) {
+  $('result').append(el('h2', null, `出題者「${quiz.owner}」・${quiz.qids.length} 題`));
+  if (!qs) $('result').append(el('p', 'fallback', '題庫載入失敗，只能顯示 A／B。'));
 
   const ol = document.createElement('ol');
   quiz.qids.forEach((qid, i) => {
     const li = document.createElement('li');
     const correct = quiz.answers[i];               // 'A' 或 'B'
-    const q = set && set[qid];
+    const q = qs && qs.set[qid];
+
+    const head = el('div', 'qhead');
+    head.append(el('span', 'num', String(i + 1).padStart(2, '0')));
     if (q) {
-      li.textContent = q.q + '　→　';
-      const b = document.createElement('b');
-      b.textContent = correct === 'A' ? q.a : q.b;
-      li.append(b);
+      const genre = qs.genres[q.g];
+      if (genre) head.append(el('span', 'genre', genre.emoji || ''));
+      head.append(el('span', 'qtext', q.q));
     } else {
-      li.textContent = '正解：' + correct;          // 降級：題庫載不到
+      head.append(el('span', 'qtext', '正解：' + correct));   // 降級：題庫載不到
+    }
+    li.append(head);
+
+    if (q) {
+      const opts = el('div', 'opts');
+      opts.append(el('div', 'opt' + (correct === 'A' ? ' ok' : ''), q.a));
+      opts.append(el('div', 'opt' + (correct === 'B' ? ' ok' : ''), q.b));
+      li.append(opts);
     }
     ol.append(li);
   });
@@ -71,7 +183,7 @@ function render(quiz, set) {
 
   // 題庫載不到就不給送出：g 的 key 必須是題庫的分類名，網站的雷達圖照那些 key 取值，
   // 算不出分類就不該寫進去。
-  if (set) renderSubmit(quiz, set);
+  if (qs) renderSubmit(quiz, qs.set);
 }
 
 function renderSubmit(quiz, set) {
@@ -79,9 +191,11 @@ function renderSubmit(quiz, set) {
   const box = document.createElement('details');
   box.innerHTML = `
     <summary>懶得點，直接幫我送出一筆</summary>
-    <p>這會真的寫進這份 quiz 的排行榜，出題者看得到。</p>
-    <label>暱稱 <input id="sname" required></label>
-    <label>分數 <input id="sscore" type="number" min="0" max="${total}" value="${total}"></label>
+    <p class="note">這會真的寫進這份 quiz 的排行榜，出題者看得到。</p>
+    <div class="fields">
+      <label>暱稱 <input id="sname" required autocomplete="off"></label>
+      <label>分數 <input id="sscore" type="number" min="0" max="${total}" value="${total}"></label>
+    </div>
     <button id="sbtn">送出</button>
     <p id="smsg"></p>`;
   $('result').append(box);
