@@ -81,7 +81,7 @@
   .fallback { color: var(--warn); }
 
   details {
-    margin-top: 1.5rem; background: var(--card);
+    margin: 0 0 1.25rem; background: var(--card);
     border: 1px solid var(--line); border-radius: var(--radius); padding: .85rem;
   }
   summary { cursor: pointer; font-weight: 600; }
@@ -154,6 +154,10 @@ function render(quiz, qs) {
   $('result').append(el('h2', null, `出題者「${quiz.owner}」・${quiz.qids.length} 題`));
   if (!qs) $('result').append(el('p', 'fallback', '題庫載入失敗，只能顯示 A／B。'));
 
+  // 題庫載不到就不給送出：g 的 key 必須是題庫的分類名，網站的雷達圖照那些 key 取值，
+  // 算不出分類就不該寫進去。
+  if (qs) renderSubmit(quiz, qs.set);
+
   const ol = document.createElement('ol');
   quiz.qids.forEach((qid, i) => {
     const li = document.createElement('li');
@@ -180,10 +184,6 @@ function render(quiz, qs) {
     ol.append(li);
   });
   $('result').append(ol);
-
-  // 題庫載不到就不給送出：g 的 key 必須是題庫的分類名，網站的雷達圖照那些 key 取值，
-  // 算不出分類就不該寫進去。
-  if (qs) renderSubmit(quiz, qs.set);
 }
 
 function renderSubmit(quiz, set) {
