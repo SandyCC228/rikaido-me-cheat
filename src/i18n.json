@@ -1,6 +1,6 @@
 {
   "ja": {
-    "dir": "ja/",
+    "dir": "",
     "label": "日本語",
     "title": "rikaido 答え一覧",
     "desc": "rikaido.me のクイズの問題と正解をまとめて表示します。URL を貼るだけ。スコアの送信もできます。",
@@ -80,8 +80,8 @@
       "sendFail": "전송 실패: "
     }
   },
-  "zh-Hant": {
-    "dir": "",
+  "zh-TW": {
+    "dir": "tw/",
     "label": "繁體中文",
     "title": "rikaido 正解查詢",
     "desc": "查詢 rikaido.me 任一份 quiz 的題目與正解，貼上網址就能看到全部答案，也可以直接送出一筆成績。",

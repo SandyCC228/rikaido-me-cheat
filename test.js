@@ -92,7 +92,7 @@ assert.strictEqual(localeOrder('x').length, 4);                          // 永�
   const langs = Object.keys(i18n);
   const BASE = 'https://sandycc228.github.io/rikaido-me-cheat/';
 
-  assert.deepStrictEqual(langs, ['ja', 'en', 'ko', 'zh-Hant']);   // 語言列的排序就是這個順序
+  assert.deepStrictEqual(langs, ['ja', 'en', 'ko', 'zh-TW']);   // 語言列的排序就是這個順序
 
   // 每個語系的 UI 字串 key 必須一致，少一個就是某頁會露出 key 名
   const keysOf = l => Object.keys(i18n[l].ui).sort();

@@ -5,7 +5,7 @@
 ## 結構
 
 ```
-index.html  ja/  en/  ko/    產生出來的四個語系頁，不要直接改
+index.html（日文）  en/  ko/  tw/    產生出來的四個語系頁，不要直接改
 favicon.webp  robots.txt  sitemap.xml
 assets/     core.js（CLI 與網頁共用）、app.js（網頁）
 src/        i18n.json（文案）、template.html（版型）、build.js

@@ -5,9 +5,9 @@ const path = require('path');
 
 const ROOT = path.join(__dirname, '..');   // 產物寫到 repo 根，Pages 從那裡 serve
 const BASE = 'https://sandycc228.github.io/rikaido-me-cheat/';   // 綁自訂網域改這裡
-const X_DEFAULT = 'en';   // 沒有匹配語言時給國際訪客看英文
+const X_DEFAULT = 'ja';   // 沒有匹配語言時看日文（根目錄），與 rikaido 本站一致
 
-const OG_LOCALE = { 'zh-Hant': 'zh_TW', ja: 'ja_JP', en: 'en_US', ko: 'ko_KR' };
+const OG_LOCALE = { ja: 'ja_JP', en: 'en_US', ko: 'ko_KR', 'zh-TW': 'zh_TW' };
 
 const i18n = JSON.parse(fs.readFileSync(path.join(__dirname, 'i18n.json'), 'utf8'));
 const template = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
