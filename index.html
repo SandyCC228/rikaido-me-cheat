@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-Hant">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rikaido 正解查詢</title>
+<script src="core.js"></script>
+<body>
+<h1>rikaido 正解查詢</h1>
+<form id="ask">
+  <input id="input" placeholder="貼上 quiz 網址或 id" size="40" required>
+  <button>查詢</button>
+</form>
+<p id="status"></p>
+<div id="result"></div>
+
+<script>
+const { fetchQuiz, toQuizId } = window.CHEAT_CORE;
+const $ = id => document.getElementById(id);
+
+// 題庫只能用 script 標籤載（fetch 會被 CORS 擋）；失敗回 null 走降級
+const loaded = new Map();
+function loadQuestions(url, v) {
+  if (!loaded.has(url)) loaded.set(url, new Promise(res => {
+    const s = document.createElement('script');
+    s.src = url;
+    s.onload = () => res(window.RIKAIDO_QUESTIONS?.sets?.[v] || window.RIKAIDO_QUESTIONS?.sets?.[1] || null);
+    s.onerror = () => res(null);
+    document.head.appendChild(s);
+  }));
+  return loaded.get(url);
+}
+
+$('ask').onsubmit = async e => {
+  e.preventDefault();
+  $('result').innerHTML = '';
+  $('status').textContent = '查詢中…';
+  try {
+    const quiz = await fetchQuiz(toQuizId($('input').value.trim()));
+    const set = await loadQuestions(quiz.questionsUrl, quiz.v);
+    $('status').textContent = '';
+    render(quiz, set);
+  } catch (err) {
+    $('status').textContent = err.message;
+  }
+};
+
+function render(quiz, set) {
+  const head = document.createElement('h2');
+  head.textContent = `出題者「${quiz.owner}」・${quiz.qids.length} 題`;
+  $('result').append(head);
+
+  if (!set) $('result').append(Object.assign(document.createElement('p'),
+    { textContent: '題庫載入失敗，只能顯示 A／B。' }));
+
+  const ol = document.createElement('ol');
+  quiz.qids.forEach((qid, i) => {
+    const li = document.createElement('li');
+    const correct = quiz.answers[i];               // 'A' 或 'B'
+    const q = set && set[qid];
+    if (q) {
+      li.textContent = q.q + '　→　';
+      const b = document.createElement('b');
+      b.textContent = correct === 'A' ? q.a : q.b;
+      li.append(b);
+    } else {
+      li.textContent = '正解：' + correct;          // 降級：題庫載不到
+    }
+    ol.append(li);
+  });
+  $('result').append(ol);
+}
+</script>
+</body>
+</html>
