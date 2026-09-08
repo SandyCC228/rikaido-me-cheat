@@ -122,7 +122,8 @@
   <h1>rikaido 正解查詢</h1>
   <p class="intro">貼上 rikaido 的 quiz 網址或 id，就能看到那份 quiz 的全部題目與正解。</p>
   <form id="ask">
-    <input id="input" name="q" placeholder="貼上 quiz 網址或 id" required
+    <!-- 建議由 datalist 提供；瀏覽器的表單歷史會混進其他網站的紀錄 -->
+    <input id="input" placeholder="貼上 quiz 網址或 id" required autocomplete="off"
            list="recent" aria-label="貼上 quiz 網址或 id">
     <datalist id="recent"></datalist>
     <button>查詢</button>

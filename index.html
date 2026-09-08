@@ -122,7 +122,8 @@
   <h1>rikaido 答え一覧</h1>
   <p class="intro">rikaido のクイズ URL か ID を貼ると、そのクイズの全問題と正解が表示されます。</p>
   <form id="ask">
-    <input id="input" name="q" placeholder="クイズの URL か ID を貼り付け" required
+    <!-- 建議由 datalist 提供；瀏覽器的表單歷史會混進其他網站的紀錄 -->
+    <input id="input" placeholder="クイズの URL か ID を貼り付け" required autocomplete="off"
            list="recent" aria-label="クイズの URL か ID を貼り付け">
     <datalist id="recent"></datalist>
     <button>検索</button>

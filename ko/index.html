@@ -122,7 +122,8 @@
   <h1>rikaido 정답 조회</h1>
   <p class="intro">rikaido 퀴즈 URL이나 ID를 붙여넣으면 해당 퀴즈의 모든 문제와 정답을 볼 수 있습니다.</p>
   <form id="ask">
-    <input id="input" name="q" placeholder="퀴즈 URL 또는 ID 붙여넣기" required
+    <!-- 建議由 datalist 提供；瀏覽器的表單歷史會混進其他網站的紀錄 -->
+    <input id="input" placeholder="퀴즈 URL 또는 ID 붙여넣기" required autocomplete="off"
            list="recent" aria-label="퀴즈 URL 또는 ID 붙여넣기">
     <datalist id="recent"></datalist>
     <button>조회</button>

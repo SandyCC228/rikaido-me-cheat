@@ -65,9 +65,8 @@ assert.deepStrictEqual(codes('https://rikaido.me/ko/?q=x'), ['ko', 'tw', 'ja', '
 assert.deepStrictEqual(codes('dek3wath6y'), ['tw', 'ja', 'en', 'ko']);   // 純 id：繁中優先
 assert.strictEqual(localeOrder('x').length, 4);                          // 永遠涵蓋四個語系
 
-// 瀏覽器模式：<script src="core.js"> 與頁面的 inline script 共用同一個全域作用域，
-// core.js 若在頂層宣告名字，頁面再宣告同名變數就是 SyntaxError（已實際發生過：
-// "Identifier 'fetchQuiz' has already been declared"）。這裡照那個情境跑兩段 script。
+// core.js 與頁面的 script 共用全域作用域，頂層宣告撞名就是 SyntaxError。
+// 照那個情境跑兩段 script。
 {
   const vm = require('vm');
   const PAGE = 'const { fetchQuiz, toQuizId, capOf, spread, buildWrite, FS, LOCALES } = window.CHEAT_CORE;';
@@ -135,7 +134,7 @@ assert.strictEqual(localeOrder('x').length, 4);                          // 永�
 
 console.log('✓ core.js 全部通過');
 
-// fetchQuiz：一次 batchGet 四個 collection，認出語系
+// fetchQuiz：依序查各語系的 collection，認出 quiz 屬於哪一個
 (async () => {
   const { fetchQuiz } = require('./assets/core.js');
   const q = await fetchQuiz('dek3wath6y');

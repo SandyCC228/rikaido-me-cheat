@@ -29,8 +29,7 @@
     return loaded.get(url);
   }
 
-  // 查過的 quiz 記在本機，下次點輸入框就有建議。
-  // 不靠瀏覽器的表單歷史：表單被 preventDefault，多數瀏覽器不會記錄。
+  // 查過的 quiz 存在本機供 datalist 建議；表單被 preventDefault，瀏覽器不會自己記錄
   const KEY = 'rikaido-recent';
   const readRecent = () => { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch { return []; } };
   function fillRecent(ids) {
@@ -63,8 +62,7 @@
     $('result').append(el('h2', null, t('owner', { owner: quiz.owner, n: quiz.qids.length })));
     if (!qs) $('result').append(el('p', 'fallback', t('fallback')));
 
-    // 題庫載不到就不給送出：g 的 key 必須是題庫的分類名，網站的雷達圖照那些 key 取值，
-    // 算不出分類就不該寫進去。
+    // 沒有題庫就算不出分類，g 的 key 必須是題庫的分類名，寧可不給送出
     if (qs) renderSubmit(quiz, qs.set);
 
     const ol = document.createElement('ol');

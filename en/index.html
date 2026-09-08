@@ -122,7 +122,8 @@
   <h1>rikaido Answer Key</h1>
   <p class="intro">Paste a rikaido quiz URL or ID to see every question with its correct answer.</p>
   <form id="ask">
-    <input id="input" name="q" placeholder="Paste a quiz URL or ID" required
+    <!-- 建議由 datalist 提供；瀏覽器的表單歷史會混進其他網站的紀錄 -->
+    <input id="input" placeholder="Paste a quiz URL or ID" required autocomplete="off"
            list="recent" aria-label="Paste a quiz URL or ID">
     <datalist id="recent"></datalist>
     <button>Look up</button>

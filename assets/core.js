@@ -1,6 +1,5 @@
 // 共用邏輯：CLI（require）與網頁（<script src>）都用這一份。
-// 整份包在 IIFE 裡：瀏覽器的 <script src> 是共用全域作用域的，不包的話
-// 這裡每個頂層宣告都會變成全域變數，跟頁面自己的程式碼撞名。
+// 包在 IIFE 裡：<script src> 與頁面共用全域作用域，頂層宣告會跟頁面的程式碼撞名。
 (() => {
   const DB = 'projects/rikaido-9qu1/databases/(default)/documents';
   const FS = 'https://firestore.googleapis.com/v1/' + DB;
@@ -76,9 +75,8 @@
     return (await res.json())[0]?.found ?? null;
   }
 
-  // 依序試各語系，中了就停。
-  // 不並行、也不把四個路徑塞進同一個 batchGet：Firestore 的規則對不存在的文件回 403，
-  // 而 quiz 只屬於一個語系，多發的請求必定失敗，瀏覽器 console 會留下紅字。
+  // 依序試各語系，中了就停。Firestore 對不存在的文件回 403，而 quiz 只屬於一個語系：
+  // 四個路徑併成一次 batchGet 會整批被拒，並行則在 console 留下三個失敗請求。
   async function fetchQuiz(input) {
     const quizId = toQuizId(input);
     let hit = null;

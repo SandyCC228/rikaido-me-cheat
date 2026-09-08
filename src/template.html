@@ -118,7 +118,8 @@
   <h1>{{title}}</h1>
   <p class="intro">{{intro}}</p>
   <form id="ask">
-    <input id="input" name="q" placeholder="{{placeholder}}" required
+    <!-- 建議由 datalist 提供；瀏覽器的表單歷史會混進其他網站的紀錄 -->
+    <input id="input" placeholder="{{placeholder}}" required autocomplete="off"
            list="recent" aria-label="{{placeholder}}">
     <datalist id="recent"></datalist>
     <button>{{search}}</button>
