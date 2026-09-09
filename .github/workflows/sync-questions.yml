@@ -21,8 +21,10 @@ jobs:
             echo "題庫沒有變動"
             exit 0
           fi
-          git config user.name SandyCC228
-          git config user.email 243731973+SandyCC228@users.noreply.github.com
+          # 推送權限來自上面的 permissions + checkout 存下的 GITHUB_TOKEN；
+          # 身分只影響署名，用 -c 帶過去就好，不寫進 config
           git add assets/questions
-          git commit -m "chore: 同步題庫快照"
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -m "chore: 同步題庫快照"
           git push
