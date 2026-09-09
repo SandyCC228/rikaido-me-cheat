@@ -59,6 +59,8 @@
     border: 1px solid var(--line); border-radius: var(--radius);
     background: var(--card); color: inherit; font: inherit;
   }
+  /* datalist 的下拉箭頭多餘，打字時仍會出現建議 */
+  #input::-webkit-calendar-picker-indicator { display: none; }
   button {
     padding: .7rem 1.2rem; border: 0; border-radius: var(--radius);
     background: var(--fg); color: var(--bg);
